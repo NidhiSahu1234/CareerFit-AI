@@ -2,7 +2,8 @@
 
 CareerFit AI is a Streamlit workspace for reviewing resumes, comparing them with a job posting, and preparing a tailored resume. Its job-match estimate is explainable and heuristic; it is not an official ATS score.
 
-**Repository:** [NidhiSahu1234/ResumeAnalyser](https://github.com/NidhiSahu1234/ResumeAnalyser)  
+**Repository:** [NidhiSahu1234/CareerFit-AI](https://github.com/NidhiSahu1234/CareerFit-AI)
+
 **Live application:** Not deployed yet.
 
 ## Screenshots

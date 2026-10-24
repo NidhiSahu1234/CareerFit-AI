@@ -13,8 +13,8 @@ CareerFit AI is a Streamlit application. Streamlit Community Cloud is the simple
 ## Streamlit Community Cloud
 
 1. Sign in to Streamlit Community Cloud and connect the intended GitHub repository.
-2. Select the repository's deployment branch and set the application entry point to `app.py`.
-3. Add Python dependencies from `requirements.txt`. `packages.txt` declares the Chromium packages for browser automation and Tesseract/Poppler for OCR; confirm the host supports these system packages if you use those features.
+2. Select `NidhiSahu1234/CareerFit-AI`, branch `main`, and set the application entry point to `app.py`. Use the current Community Cloud default Python version (currently 3.12); verify dependency installation in the Cloud build logs.
+3. Community Cloud installs Python dependencies from `requirements.txt`. `packages.txt` declares the Chromium packages for browser automation and Tesseract/Poppler for OCR; confirm the host supports these system packages if you use those features.
 4. If Gemini analysis is enabled, add `GOOGLE_API_KEY` in the app's Secrets settings as a TOML string, for example:
 
    ```toml

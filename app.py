@@ -478,7 +478,7 @@ class ResumeApp:
         st.markdown(
             "<div style='text-align:center; color:#9aa4b2; font-size:0.9rem;'>"
             "CareerFit AI · Resume feedback you can explain · "
-            "<a href='https://github.com/NidhiSahu1234/ResumeAnalyser' "
+            "<a href='https://github.com/NidhiSahu1234/CareerFit-AI' "
             "target='_blank' rel='noopener noreferrer'>Source code</a></div>",
             unsafe_allow_html=True,
         )
@@ -991,8 +991,8 @@ class ResumeApp:
                 "database. AI analysis sends resume text to the provider you configure. "
                 "This app does not provide separate user accounts."
             )
-        st.markdown("Built on the open-source project credited in the [LICENSE](https://github.com/NidhiSahu1234/ResumeAnalyser/blob/main/LICENSE).")
-        st.markdown("[View CareerFit AI source code](https://github.com/NidhiSahu1234/ResumeAnalyser)")
+        st.markdown("Built on the open-source project credited in the [LICENSE](https://github.com/NidhiSahu1234/CareerFit-AI/blob/main/LICENSE).")
+        st.markdown("[View CareerFit AI source code](https://github.com/NidhiSahu1234/CareerFit-AI)")
 
     def render_analyzer(self):
         """Render the resume analyzer page"""
@@ -2644,7 +2644,7 @@ class ResumeApp:
 
     def show_repo_notification(self):
         """Link to this project's source instead of unrelated promotional repos."""
-        st.sidebar.markdown("[CareerFit AI source code](https://github.com/NidhiSahu1234/ResumeAnalyser)")
+        st.sidebar.markdown("[CareerFit AI source code](https://github.com/NidhiSahu1234/CareerFit-AI)")
 
     def main(self):
         """Main application entry point"""

@@ -14,4 +14,4 @@ streamlit run app.py
 
 Keep API keys in ignored environment files or a secret manager. Do not commit resumes, SQLite databases, exports, credentials, or other personal data. For matching changes, add tests for the pure functions in `matching/` and keep the heuristic transparent.
 
-Open a pull request against [NidhiSahu1234/ResumeAnalyser](https://github.com/NidhiSahu1234/ResumeAnalyser) with a concise description and the checks you ran. Preserve the upstream attribution and terms in `LICENSE`.
+Open a pull request against [NidhiSahu1234/CareerFit-AI](https://github.com/NidhiSahu1234/CareerFit-AI) with a concise description and the checks you ran. Preserve the upstream attribution and terms in `LICENSE`.
