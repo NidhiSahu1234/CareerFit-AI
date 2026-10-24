@@ -1,0 +1,17 @@
+# CareerFit AI
+
+# CareerFit AI uses Streamlit's dark theme by default; page styles load from style/style.css.
+
+[theme]
+base = "dark"
+primaryColor = "#00B4DB"
+backgroundColor = "#171717"
+secondaryBackgroundColor = "#2D2D2D"
+textColor = "#E0E0E0"
+
+[server]
+# The job-match uploader and server setting share the 5 MB cap.
+maxUploadSize = 5
+
+[browser]
+gatherUsageStats = false
