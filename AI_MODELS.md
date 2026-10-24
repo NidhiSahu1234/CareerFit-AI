@@ -1,6 +1,6 @@
 # Optional AI analysis
 
-CareerFit AI has one implemented external AI provider: Google Gemini, accessed through the `google-generativeai` package. AI analysis is optional. Resume-versus-job matching uses deterministic local rules and does not need a provider key.
+CareerFit AI has one implemented external AI provider: Google Gemini, accessed through the maintained `google-genai` package. AI analysis is optional. Resume-versus-job matching uses deterministic local rules and does not need a provider key.
 
 ## Configuration
 

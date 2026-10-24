@@ -29,12 +29,12 @@ The job-match page uses deterministic, offline rules and works without an AI key
 - SQLite for optional resume-builder/dashboard data
 - pandas and Plotly for analysis views
 - pypdf/pdfplumber and python-docx for document handling
-- Google Gemini through `google-generativeai` for the optional AI analyzer
+- Google Gemini through the maintained `google-genai` SDK for the optional AI analyzer
 - Selenium and Chromium for job-search features that need browser automation
 
 ## Local setup
 
-Python 3.10 or newer is recommended.
+Python 3.11 or newer is required by the current unpinned dependencies.
 
 ```powershell
 py -m venv .venv

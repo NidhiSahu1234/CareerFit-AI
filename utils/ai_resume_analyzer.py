@@ -2,11 +2,13 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 import builtins
+import httpx
 
 if not hasattr(builtins, "xrange"):
     builtins.xrange = range
 
-import google.generativeai as genai
+from google import genai
+from google.genai import errors
 import pdfplumber
 from pdf2image import convert_from_path
 import pytesseract
@@ -15,6 +17,8 @@ import requests
 import json
 import math
 import re
+
+GEMINI_MODEL = "gemini-3.8-flash"
 
 
 def _configured_secret(name):
@@ -36,10 +40,12 @@ class AIResumeAnalyzer:
         load_dotenv()
         
         # Configure Google Gemini AI
-        self.google_api_key = _configured_secret("GOOGLE_API_KEY")
-        
-        if self.google_api_key:
-            genai.configure(api_key=self.google_api_key)
+        api_key = _configured_secret("GOOGLE_API_KEY")
+        self.client = (
+            genai.Client(api_key=api_key)
+            if api_key
+            else None
+        )
     
     def extract_text_from_pdf(self, pdf_file):
         """Extract text from PDF using pdfplumber and OCR if needed"""
@@ -203,12 +209,10 @@ class AIResumeAnalyzer:
         if not resume_text:
             return {"error": "Resume text is required for analysis."}
         
-        if not self.google_api_key:
+        if not self.client:
             return {"error": "Google Gemini is not configured. Set GOOGLE_API_KEY in your local .env or Streamlit secrets."}
         
         try:
-            model = genai.GenerativeModel("gemini-2.5-flash")
-            
             base_prompt = f"""
             You are an expert resume analyst with deep knowledge of industry standards, job requirements, and hiring practices across various fields. Your task is to provide a comprehensive, detailed analysis of the resume provided.
             
@@ -274,8 +278,18 @@ class AIResumeAnalyzer:
                 [List specific requirements from the job description that are not addressed in the resume, with recommendations on how to address each gap]
                 """
             
-            response = model.generate_content(base_prompt)
-            analysis = response.text.strip()
+            response = self.client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=base_prompt,
+            )
+            try:
+                analysis = (response.text or "").strip()
+            except ValueError:
+                analysis = ""
+            if not analysis:
+                return {
+                    "error": "Gemini returned no readable text. The request may have been blocked; review the prompt and try again."
+                }
             
             # Extract resume score if present
             resume_score = self._extract_score_from_text(analysis)
@@ -289,8 +303,36 @@ class AIResumeAnalyzer:
                 "ats_score": ats_score
             }
         
-        except Exception:
-            return {"error": "Google Gemini could not complete the request. Check the key, provider availability, and connection."}
+        except errors.APIError as error:
+            status = error.code
+            if status in (400, 401, 403):
+                message = (
+                    "Gemini rejected the request or API credentials. Verify that "
+                    "GOOGLE_API_KEY is valid and Gemini API access is enabled."
+                )
+            elif status == 404:
+                message = (
+                    "Gemini could not find the requested model or API endpoint. "
+                    "Verify model availability and API access for the configured project."
+                )
+            elif status == 429:
+                message = "Gemini quota or rate limit reached. Check the project's quota and try again later."
+            elif status >= 500:
+                message = "Gemini is temporarily unavailable. Try again later."
+            else:
+                message = f"Gemini rejected the request (HTTP {status}). Check the request configuration."
+            return {"error": message}
+        except httpx.TimeoutException:
+            return {"error": "Gemini request timed out. Check the connection and try again."}
+        except httpx.RequestError:
+            return {"error": "Could not connect to Gemini. Check the connection and try again."}
+        except Exception as error:
+            return {
+                "error": (
+                    "Gemini analysis failed unexpectedly "
+                    f"({type(error).__name__}). Try again or contact the app administrator."
+                )
+            }
 
     
     def generate_pdf_report(self, analysis_result, candidate_name, job_role):

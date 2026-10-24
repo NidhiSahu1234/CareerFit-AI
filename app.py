@@ -2564,7 +2564,10 @@ class ResumeApp:
                                 else:
                                     st.error(f"Analysis failed: {analysis_result.get('error', 'Unknown error')}")
                         except Exception as ai_error:
-                            st.error("AI analysis could not be completed. Check the Gemini key and try again.")
+                            st.error(
+                                "AI Analyzer failed while processing this request "
+                                f"({type(ai_error).__name__}). Check the input and service configuration, then try again."
+                            )
 
 
     def render_home(self):

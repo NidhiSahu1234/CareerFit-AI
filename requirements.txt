@@ -21,7 +21,8 @@ selenium
 numpy
 webdriver-manager
 chromedriver-autoinstaller
-google-generativeai
+google-genai<3.0.0
+httpx
 pdf2image
 pytesseract
 pdfplumber
