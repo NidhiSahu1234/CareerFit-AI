@@ -200,7 +200,7 @@ div[data-baseweb="input"] > div {
     margin: 0 !important;
 }
 
-/* Admin Login Section */
+/* Expander styling */
 .stExpander {
     background: var(--bg-dark);
     border-radius: 12px;

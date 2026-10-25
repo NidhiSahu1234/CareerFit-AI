@@ -24,8 +24,7 @@ from config.courses import COURSES_BY_CATEGORY, RESUME_VIDEOS, INTERVIEW_VIDEOS,
 from config.job_roles import JOB_ROLES
 from config.database import (
     get_database_connection, save_resume_data, save_analysis_data,
-    init_database, verify_admin, log_admin_action, save_ai_analysis_data,
-    get_ai_analysis_stats, reset_ai_analysis_stats, get_detailed_ai_analysis_stats
+    init_database, save_ai_analysis_data, get_detailed_ai_analysis_stats
 )
 from utils.ai_resume_analyzer import AIResumeAnalyzer
 from utils.resume_builder import ResumeBuilder
@@ -77,10 +76,6 @@ class ResumeApp:
         # Initialize navigation state
         if 'page' not in st.session_state:
             st.session_state.page = 'home'
-
-        # Initialize admin state
-        if 'is_admin' not in st.session_state:
-            st.session_state.is_admin = False
 
         self.pages = {
             "🏠 HOME": self.render_home,
@@ -477,9 +472,7 @@ class ResumeApp:
         st.markdown("---")
         st.markdown(
             "<div style='text-align:center; color:#9aa4b2; font-size:0.9rem;'>"
-            "CareerFit AI · Resume feedback you can explain · "
-            "<a href='https://github.com/NidhiSahu1234/CareerFit-AI' "
-            "target='_blank' rel='noopener noreferrer'>Source code</a></div>",
+            "CareerFit AI · Resume feedback you can explain · ",
             unsafe_allow_html=True,
         )
 
@@ -991,7 +984,6 @@ class ResumeApp:
                 "database. AI analysis sends resume text to the provider you configure. "
                 "This app does not provide separate user accounts."
             )
-        st.markdown("[View CareerFit AI source code](https://github.com/NidhiSahu1234/CareerFit-AI)")
 
     def render_analyzer(self):
         """Render the resume analyzer page"""
@@ -1470,26 +1462,10 @@ class ResumeApp:
                 </div>
                 """, unsafe_allow_html=True)
              
-                        # Add AI Analyzer Stats in an expander
+            # Add AI Analyzer Stats in an expander
             with st.expander("📊 AI Analyzer Statistics", expanded=False):
                 try:
-                    # Add a reset button for admin users
-                    if st.session_state.get('is_admin', False):
-                        if st.button(
-    "🔄 Reset AI Analysis Statistics",
-    type="secondary",
-     key="reset_ai_stats_button_2"):
-                            from config.database import reset_ai_analysis_stats
-                            result = reset_ai_analysis_stats()
-                            if result["success"]:
-                                st.success(result["message"])
-                            else:
-                                st.error(result["message"])
-                            # Refresh the page to show updated stats
-                            st.rerun()
-
                     # Get detailed AI analysis statistics
-                    from config.database import get_detailed_ai_analysis_stats
                     ai_stats = get_detailed_ai_analysis_stats()
 
                     if ai_stats["total_analyses"] > 0:
@@ -2643,16 +2619,10 @@ class ResumeApp:
         with stats_tab:
             feedback_manager.render_feedback_stats()
 
-
-    def show_repo_notification(self):
-        """Link to this project's source instead of unrelated promotional repos."""
-        st.sidebar.markdown("[CareerFit AI source code](https://github.com/NidhiSahu1234/CareerFit-AI)")
-
     def main(self):
         """Main application entry point"""
         self.apply_global_styles()
         
-        # Admin login/logout in sidebar
         with st.sidebar:
             animation = self.load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_xyadoh9h.json")
             if animation:
@@ -2665,42 +2635,6 @@ class ResumeApp:
                 if st.button(page_name, width='stretch'):
                     st.session_state.page = page_key(page_name)
                     st.rerun()
-
-            # Add some space before admin login
-            st.markdown("<br><br>", unsafe_allow_html=True)
-            st.markdown("---")
-
-            # Admin Login/Logout section at bottom
-            if st.session_state.get('is_admin', False):
-                st.success(f"Logged in as: {st.session_state.get('current_admin_email')}")
-                if st.button("Logout", key="logout_button"):
-                    try:
-                        log_admin_action(st.session_state.get('current_admin_email'), "logout")
-                        st.session_state.is_admin = False
-                        st.session_state.current_admin_email = None
-                        st.success("Logged out successfully!")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Error during logout: {str(e)}")
-            else:
-                with st.expander("👤 Admin Login"):
-                    admin_email_input = st.text_input("Email", key="admin_email_input")
-                    admin_password = st.text_input("Password", type="password", key="admin_password_input")
-                    if st.button("Login", key="login_button"):
-                            try:
-                                if verify_admin(admin_email_input, admin_password):
-                                    st.session_state.is_admin = True
-                                    st.session_state.current_admin_email = admin_email_input
-                                    log_admin_action(admin_email_input, "login")
-                                    st.success("Logged in successfully!")
-                                    st.rerun()
-                                else:
-                                    st.error("Invalid credentials")
-                            except Exception as e:
-                                st.error(f"Error during login: {str(e)}")
-        
-            # Display the repository notification in the sidebar
-            self.show_repo_notification()
 
         # Force home page on first load
         if 'initial_load' not in st.session_state:
