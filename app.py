@@ -991,7 +991,6 @@ class ResumeApp:
                 "database. AI analysis sends resume text to the provider you configure. "
                 "This app does not provide separate user accounts."
             )
-        st.markdown("Built on the open-source project credited in the [LICENSE](https://github.com/NidhiSahu1234/CareerFit-AI/blob/main/LICENSE).")
         st.markdown("[View CareerFit AI source code](https://github.com/NidhiSahu1234/CareerFit-AI)")
 
     def render_analyzer(self):
